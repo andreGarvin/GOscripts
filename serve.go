@@ -12,7 +12,7 @@ import (
 
 // global varibles
 var (
-    help string = "./serve-help"
+    help string = "./test-files/serve-help"
     dirPaths []string
     port string
     file string

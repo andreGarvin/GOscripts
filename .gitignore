@@ -1,8 +1,6 @@
 lib
+public
 
 repl.go
 test.go
 diff.go
-
-home.html
-style.css
