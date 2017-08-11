@@ -1,0 +1,13 @@
+This is a cli commands for running serve and usng it
+
+# serving a file
+  serve -f [ file name | file path ] --port [ ex: 8080 | 5000 ]
+
+# serving a directory
+  serve -d [ directory name | path ] --port [ ex: 8080 | 5000 ]
+
+# serving JSON data as well
+  serve -f myJSON.json -t JSON --port [ ex: 8080 | 3000 ]
+
+# serving directroy with a given a starting index path
+  serve -d myDir -i firstFile.txt --port [ ex: 8080 | 2005 ]
