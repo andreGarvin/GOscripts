@@ -52,6 +52,21 @@ func main() {
     defer http.ListenAndServe(port, nil)
 }
 
+
+// goes through a slice of strings and check if the item exist
+func includes( arr []string, item string ) int {
+
+    for i, arr_item := range  arr {
+        arr_item = string( arr_item[ i ] )
+
+        if filepath.Base( item ) == arr_item {
+
+            return i
+        }
+    }
+    return -1
+}
+
 // returns the conents of a given existing file name
 func readFile( file_name string ) string {
 
@@ -73,6 +88,17 @@ func serveFile(w http.ResponseWriter, r *http.Request) {
     if url != "/favicon.ico" {
 
         if len( dirPaths ) != 0 {
+            
+            if url == "/" {
+
+                index := includes( dirPaths, "index.html" )
+                if index != -1 {
+
+                    file = dirPaths[ index ]
+                    fmt.Println("Serving ", file)
+                    fmt.Fprintf(w, readFile(file))
+                }
+            }
 
             for _, path := range dirPaths {
                 slice_path := strings.Split( string( path ), ".." )
