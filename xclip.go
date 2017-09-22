@@ -1,5 +1,10 @@
 package main
 
+/**
+	This is the missing copy paste xclip progarm windows and MacOSX allowing
+	to to copy stdout and paste 
+*/
+
 import (
 	// my lib
 	"./lib"
@@ -79,7 +84,7 @@ func readFile( file_name string ) ( string, error ) {
 }
 
 func writeToFile( file_name, data string ) error {
-	
+
 	EOFerror := ioutil.WriteFile( file_name, []byte( data ), 0644 )
 	if EOFerror != nil {
 		return EOFerror

@@ -1,6 +1,9 @@
-lib
+golib
 public
 
 repl.go
 test.go
 diff.go
+watch.go
+cach_test_rep.go
+getVerisonServer.go
