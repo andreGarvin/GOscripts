@@ -15,23 +15,20 @@ import (
     "strings"
     "flag"
     "fmt"
-    "os"
+    // "os"
 
     "github.com/fatih/color"
-    "github.com/andreGarvin/allPaths"
+    "../../allPaths"
 )
 
 // global varibles
 var (
     help string = "./test-files/serve-help"
     dirPaths []string
-    include string
-    port string
-    file string
-    mode string
-    dir string
+    include, port, file, dir, mode string
 )
 
+// coverts error type to string
 type err interface {
     Error() string
 }
@@ -49,19 +46,15 @@ func main() {
 
     // check if flag dir was called to excute allPaths.All() function
     if dir != "" {
-        fs, err := ioutil.ReadDir( dir )
+        paths, err := allPaths.All( dir )
         if err != nil {
-            color.Red( err.Error() )
+           color.Red(err.Error())
         } else {
-            paths, err := allPaths.All( dir, fs )
-            if err != nil {
-                fmt.Println(err)
-            } else {
-                dirPaths = paths
-            }
+           dirPaths = paths
         }
     }
 
+    // checks weather if another file was included into the file server
     if include != "" {
        dirPaths = append(dirPaths, include)
 
@@ -78,7 +71,7 @@ func main() {
     }
 
     // display the webserver is running
-    if dir != "" || len( dirpaths ) != 0 {
+    if dir != "" || len( dirPaths ) != 0 {
         if mode == "dev" {
             color.Blue("Running DEV Server at http://localhost%s\n", port)
         } else {
@@ -96,7 +89,7 @@ func main() {
 // iterates over a slice array of type string and check if the item exist returns the index of the item
 func includes( arr []string, item string ) int {
 
-    for i, arr_item := range  arr {
+    for i, arr_item := range arr {
 
         if filepath.Base( item ) == filepath.Base( string( arr_item ) ) {
             return i
@@ -142,12 +135,12 @@ func serve(w http.ResponseWriter, r *http.Request) {
 
                     data_stream, err := readFile(file)
                     if err != nil {
-                        color.Red( err.Error() )
+                        color.Red(err.Error())
                         fmt.Fprintf(w, err.Error())
+                    } else {
+                        color.Yellow("Serve: [GET] %s\n", file)
+                        fmt.Fprintf(w, data_stream)
                     }
-
-                    color.Yellow("Serve: [GET] %s\n", file)
-                    fmt.Fprintf(w, data_stream)
                 }
             }
 
@@ -178,9 +171,10 @@ func serve(w http.ResponseWriter, r *http.Request) {
             if err != nil {
                 color.Red( err.Error() )
                 fmt.Fprintf(w, err.Error())
+            } else {
+                color.Yellow("Serve: [GET] %s\n", file)
+                fmt.Fprintf(w, data_stream)
             }
-            color.Yellow("Serve: [GET] %s\n", file)
-            fmt.Fprintf(w, data_stream)
         }
     }
 }
@@ -200,9 +194,9 @@ func serveDev(w http.ResponseWriter, r *http.Request) {
                   if err != nil {
                       color.Red( err.Error() )
                       fmt.Fprintf(w, err.Error())
+                  } else {
+                      fmt.Fprintf(w, data_stream)
                   }
-                  fmt.Fprintf(w, data_stream)
-                  return
               }
           } else {
 
@@ -214,9 +208,9 @@ func serveDev(w http.ResponseWriter, r *http.Request) {
                   if err != nil {
                       color.Red( err.Error() )
                       fmt.Fprintf(w, err.Error())
+                  } else {
+                      fmt.Fprintf(w, data_stream)
                   }
-                  fmt.Fprintf(w, data_stream)
-                  return
               } else {
 
                   index := includes( dirPaths, filepath.Clean( filepath.Join(dir, "index.html" ) ) )
@@ -227,16 +221,16 @@ func serveDev(w http.ResponseWriter, r *http.Request) {
                       if err != nil {
                           color.Red( err.Error() )
                           fmt.Fprintf(w, err.Error())
+                      } else {
+                          fmt.Fprintf(w, data_stream)
                       }
-                      fmt.Fprintf(w, data_stream)
-                      return
                   }
               }
           }
       }
 }
 
-// // recursively gets all files paths in a given directory
+// recursively gets all files paths in a given directory
 // func recursiveTreeDive( root string, dir []os.FileInfo ) {
 //
 //     for _, f := range dir {
